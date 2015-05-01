@@ -64,7 +64,7 @@ class ViewController : UIViewController  {
         case "+":  performOperation( {  $1 + $0 }) // 注意：传的是方法，而不是方法的参数。参数在performOpe..这个方法指定
         case "−":  performOperation( {  $1 - $0 })
         case "÷":  performOperation( {  $1 / $0 })
-        case "√":  performOperation( {  sqrt($0)})
+        case "√":  performOperation( sqrt )
         default : break
         }
         
