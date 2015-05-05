@@ -13,8 +13,9 @@ class ViewController : UIViewController  {
     
     @IBOutlet weak var display: UILabel!
   
-  //heihei
     var  userIsInTheMIddleOfTyping  = false
+    
+    var brain = CalculatorBrain()
     
     @IBAction func appendDigit(sender: UIButton) {
         // 如果 sender是anyObject,则取值用的digit都要变成digit!
@@ -28,20 +29,25 @@ class ViewController : UIViewController  {
         }
     }
     
-    var operandStack = Array<Double>()
+    //fucvar operandStack = Array<Double>()
     
-    
-    
-    
+ 
     @IBAction func enter() {
         userIsInTheMIddleOfTyping = false;
+        /*
         operandStack.append(digitValue)
-        println("\(operandStack)")
+        println("\(operandStack)")*/
+        
+        if let result = brain.pushOperand(digitValue){
+            digitValue = result
+        } else {
+            digitValue = 0
+        }
     }
     
-    var digitValue : Double  {
+    var digitValue : Double  { // note, it's : not =
         get{
-            // need no useIsin ... ?
+            // need no useIsin  ... ?
             return NSNumberFormatter().numberFromString(display.text!)!.doubleValue
         }
         set{
@@ -54,26 +60,38 @@ class ViewController : UIViewController  {
     
     
     @IBAction func operate(sender: UIButton) {
-        let operation = sender.currentTitle!
+        
         if (userIsInTheMIddleOfTyping){
             enter()
         }
         
-        switch operation{
-        case "×":  performOperation( {  $1 * $0 })
-        case "+":  performOperation( {  $1 + $0 }) // 注意：传的是方法，而不是方法的参数。参数在performOpe..这个方法指定
-        case "−":  performOperation( {  $1 - $0 })
-        case "÷":  performOperation( {  $1 / $0 })
-        case "√":  performOperation( sqrt )
-        default : break
+        if let operation = sender.currentTitle {
+            if let result = brain.performOperation(operation){
+                digitValue = result;
+            } else {
+                digitValue = 0
+            }
+            
         }
         
+        /*if let operation = sender.currentTitle{
+            switch operation{
+            case "×":  performOperation( * )
+            case "+":  performOperation( { $1 + $0} ) // 注意：传的是方法，而不是方法的参数。参数在performOpe..这个方法指定
+            case "−":  performOperation( {  $1 - $0 })
+            case "÷":  performOperation( {  $1 / $0 })
+            case "√":  performOperation( sqrt )
+            default : break
+            }
+        }*/
+        
     }
-    //    func multiply(op1 : Double, o√p2 : Double)-> Double{
+    
+    //    func multiply(op1 : Double, op2 : Double)-> Double{
     //        return op1 * op2
     //    }
     
-    func performOperation(operation: (Double,Double)-> Double) {
+    /*func performOperation(operation: (Double,Double)-> Double) {
         if operandStack.count >= 2 {
             digitValue = operation(operandStack.removeLast(), operandStack.removeLast())
             enter()
@@ -85,7 +103,7 @@ class ViewController : UIViewController  {
             digitValue = operation(operandStack.removeLast())
             enter()
         }
-    }
+    }*/
     
 }
 
